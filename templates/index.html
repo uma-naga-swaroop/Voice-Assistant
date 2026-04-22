@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Voice Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #1f4037, #99f2c8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 350px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🤖 AI Voice Assistant</h2>
+
+    <button onclick="startListening()">🎤 Speak</button>
+
+    <p id="output">Say something...</p>
+    <p class="status" id="status">Idle</p>
+</div>
+
+<script>
+function startListening() {
+    const status = document.getElementById("status");
+    const output = document.getElementById("output");
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+    status.innerText = "Listening... 🎧";
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        let command = event.results[0][0].transcript;
+        output.innerText = command;
+        status.innerText = "Processing... ⚙️";
+
+        fetch("/command", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({command: command})
+        })
+        .then(() => {
+            status.innerText = "Done ✅";
+        });
+    };
+
+    recognition.onerror = function() {
+        status.innerText = "Error ❌";
+    };
+}
+</script>
+
+</body>
+</html>
