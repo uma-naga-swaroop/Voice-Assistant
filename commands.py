@@ -22,6 +22,10 @@ def execute_command(command):
         speak("Opening YouTube")
         webbrowser.open("https://www.youtube.com")
 
+    elif "chatgpt" in command:
+        speak("Opening chatgpt")
+        webbrowser.open("https://chatgpt.com/")
+
     elif "google" in command:
         speak("Opening Google")
         webbrowser.open("https://www.google.com")
